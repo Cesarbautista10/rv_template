@@ -1,11 +1,102 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <meta charset="utf-8">
-  <title>Processing.js Cube</title>
+  <meta charset="UTF-8">
+  <title>Mi Portafolio Wiki - Processing.js</title>
   <script src="https://cdn.jsdelivr.net/gh/processing-js/processing-js@master/processing.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+    /* Menú lateral */
+    .sidebar {
+      width: 250px;
+      background-color: #2c3e50;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .sidebar h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+    .sidebar a {
+      color: white;
+      text-decoration: none;
+      margin-bottom: 10px;
+      padding: 8px;
+      border-radius: 4px;
+    }
+    .sidebar a:hover {
+      background-color: #34495e;
+    }
+    /* Contenido principal */
+    .content {
+      flex-grow: 1;
+      padding: 30px;
+      overflow-y: auto;
+      background-color: #ecf0f1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .section {
+      display: none;
+      width: 100%;
+      text-align: center;
+    }
+    .section.active {
+      display: block;
+    }
+    canvas {
+      background: #000;
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #555;
+    }
+  </style>
 </head>
-<body style="margin:0; background-color: #000;">
-  <canvas id="processing-canvas" width="640" height="360" data-processing-sources="cube.pde"></canvas>
+<body>
+
+<!-- Menú lateral -->
+<div class="sidebar">
+  <h2>Portafolio</h2>
+  <a href="#" onclick="showSection('trabajo1')">Cubo 3D</a>
+  <a href="#" onclick="showSection('trabajo2')">Dron</a>
+  <a href="#" onclick="showSection('trabajo3')">Otro Proyecto</a>
+</div>
+
+<!-- Contenido principal -->
+<div class="content">
+  <div id="trabajo1" class="section active">
+    <canvas id="canvas1" width="640" height="360" data-processing-sources="cube.pde"></canvas>
+  </div>
+
+  <div id="trabajo2" class="section">
+    <canvas id="canvas2" width="640" height="360" data-processing-sources="dron.pde"></canvas>
+  </div>
+
+  <div id="trabajo3" class="section">
+    <canvas id="canvas3" width="640" height="360" data-processing-sources="dragon.pde"></canvas>
+  </div>
+</div>
+
+<!-- Script para mostrar las secciones -->
+<script>
+function showSection(id) {
+  var sections = document.querySelectorAll('.section');
+  sections.forEach(function(section) {
+    section.classList.remove('active');
+  });
+  document.getElementById(id).classList.add('active');
+}
+</script>
+
 </body>
 </html>
