@@ -16,6 +16,7 @@ int gameTime = 30;  // duración del juego en segundos
 int startTime;
 boolean gameOver = false;
 boolean victory = false;
+boolean gameStarted = false; // << NUEVO: indica si el juego ya empezó
 
 // Disparo automático
 boolean shooting = false;
@@ -31,6 +32,15 @@ void draw() {
   background(0);
   
   int currentTime = millis();
+  
+  if (!gameStarted) {
+    // Mostrar mensaje para iniciar
+    fill(255);
+    textSize(32);
+    textAlign(CENTER, CENTER);
+    text("Presiona Espacio para comenzar", width/2, height/2);
+    return; // << Salimos hasta que presione Space
+  }
   
   if (!gameOver) {
     // Movimiento continuo
@@ -85,8 +95,10 @@ void draw() {
     textSize(24);
     textAlign(LEFT);
     text("Score: " + score, 20, 40);
-    int elapsed = (millis() - startTime) / 1000;
-    text("Time Left: " + max(0, gameTime - elapsed), 20, 80);
+    
+    int elapsed = (currentTime - startTime) / 1000;
+    int timeLeft = max(0, gameTime - elapsed);  // << Solo enteros
+    text("Time Left: " + timeLeft, 20, 80);
   
     // Comprobar condiciones de fin
     if (blocks.size() == 0 && !gameOver) {
@@ -100,7 +112,7 @@ void draw() {
     }
   } else {
     // Mostrar mensaje de fin
-    background(30); // Fondo fijo elegante
+    background(30);
     fill(255);
     textSize(32);
     textAlign(CENTER, CENTER);
@@ -113,7 +125,12 @@ void draw() {
 }
 
 void keyPressed() {
-  if (!gameOver) {
+  if (!gameStarted) {
+    if (key == ' ') {
+      gameStarted = true;
+      startTime = millis(); // << Ahora sí empezamos a contar
+    }
+  } else if (!gameOver) {
     if (key == ' ') {
       shooting = true;
     } else if (key == 'a' || key == 'A') {
@@ -124,12 +141,13 @@ void keyPressed() {
   } else {
     if (key == ' ') {
       initGame();
+      gameStarted = false; // << Esperamos Space otra vez
     }
   }
 }
 
 void keyReleased() {
-  if (!gameOver) {
+  if (gameStarted && !gameOver) {
     if (key == ' ') {
       shooting = false;
     } else if (key == 'a' || key == 'A') {
@@ -150,7 +168,7 @@ void initGame() {
   spawnBlocks();
   
   score = 0;
-  startTime = millis();
+  startTime = 0;  // << No iniciar contador aquí
   gameOver = false;
   victory = false;
   shooting = false;
